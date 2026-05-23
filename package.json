@@ -1,6 +1,6 @@
 {
   "name": "opencode-fs-ops",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "OpenCode plugin that adds permission-gated `mv` and `cp` filesystem tools, encouraging agents to move/copy existing files instead of rewriting them.",
   "homepage": "https://github.com/Arcadi4/opencode-fs-ops#readme",
   "bugs": {

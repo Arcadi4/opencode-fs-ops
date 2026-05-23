@@ -3,8 +3,6 @@ import { tool } from "@opencode-ai/plugin";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 
-const PLUGIN_SERVICE = "fs-ops";
-
 const MV_DESCRIPTION = `Moves or renames a file or directory.
 
 Usage:
@@ -44,11 +42,11 @@ function isInsideWorktree(absPath: string, worktree: string): boolean {
     return !!rel && !rel.startsWith("..") && !path.isAbsolute(rel);
 }
 
-export type MoveOptions = {
+type MoveOptions = {
     overwrite?: boolean;
 };
 
-export type CopyOptions = {
+type CopyOptions = {
     overwrite?: boolean;
 };
 
@@ -59,7 +57,7 @@ export type CopyOptions = {
  *   recursively then remove the source. This mirrors the semantics of the
  *   POSIX `mv(1)` and Windows `Move-Item` commands.
  */
-export async function moveFsEntry(source: string, destination: string, options: MoveOptions = {}): Promise<void> {
+async function moveFsEntry(source: string, destination: string, options: MoveOptions = {}): Promise<void> {
     const overwrite = options.overwrite ?? false;
 
     if (!overwrite) {
@@ -98,7 +96,7 @@ export async function moveFsEntry(source: string, destination: string, options: 
     await fs.rm(source, { recursive: true, force: true });
 }
 
-export async function copyFsEntry(source: string, destination: string, options: CopyOptions = {}): Promise<void> {
+async function copyFsEntry(source: string, destination: string, options: CopyOptions = {}): Promise<void> {
     const overwrite = options.overwrite ?? false;
     const stat = await fs.lstat(source);
     const recursive = stat.isDirectory();
@@ -112,15 +110,7 @@ export async function copyFsEntry(source: string, destination: string, options: 
     });
 }
 
-const plugin: Plugin = async (input: PluginInput): Promise<Hooks> => {
-    input.client.app.log({
-        body: {
-            service: PLUGIN_SERVICE,
-            level: "info",
-            message: "loading plugin (mv, cp).",
-        },
-    });
-
+const plugin: Plugin = async (_input: PluginInput): Promise<Hooks> => {
     return {
         tool: {
             mv: tool({
